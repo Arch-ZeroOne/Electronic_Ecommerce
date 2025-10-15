@@ -3,14 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
+
 
 class AuthController extends Controller
 {
 
-
     //* creates an object representing AuthService.php constructor to help on using the available methods in this class
     public function __construct(private AuthService $authService){}
+
+
+
+    public function index(){
+        $foundUser = $this -> authService -> index(["username" => "mariagarcia", "password" => "MyPassword456!"]);
+
+        return response() -> json([$foundUser]);
+    }
 
     public function register(AuthRequest $request){
         //* uses the function from the authService to register the user
@@ -24,7 +33,17 @@ class AuthController extends Controller
         
         
     }
-    public function login(){
+    public function login(LoginRequest $request){
+        $loggedInUser = $this -> authService -> login($request -> validated());
+
+        if(!$loggedInUser){
+            return response() -> json(["message" => "Account not found"],404);
+        }
+
+        //generates a token when a user is logged in
+        $token = $loggedInUser -> createToken('api-token') -> plainTextToken;
+
+        return response() -> json(["account" =>  $loggedInUser, "token" => $token],200);
     
     }
 }

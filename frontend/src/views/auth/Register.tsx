@@ -1,6 +1,6 @@
 import ImageBackground from "../../assets/images/register-background.jpg";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import axios from "axios";
+
 import axiosClient from "../../axiosClient";
 function Register() {
   type Payload = {
@@ -37,11 +37,14 @@ function Register() {
 
   const register = async (payload: Payload) => {
     try {
-      console.log(payload);
       const request = await axiosClient.post("/register", payload);
       const response = await request.data;
-
       console.log(response);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setUserName("");
+      setPassword("");
     } catch (error) {
       console.error("Error occured while submitting form values", error);
     }
@@ -79,6 +82,7 @@ function Register() {
             type="text"
             placeholder="First Name"
             className="input"
+            value={firstname}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setFirstName(event.target.value)
             }
@@ -87,6 +91,7 @@ function Register() {
             type="text"
             placeholder="Last Name"
             className="input"
+            value={lastname}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setLastName(event.target.value);
             }}
@@ -95,6 +100,7 @@ function Register() {
             type="text"
             placeholder="Username"
             className="input"
+            value={username}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setUserName(event.target.value);
             }}
@@ -103,6 +109,7 @@ function Register() {
             type="text"
             placeholder="Email Address"
             className="input"
+            value={gmail}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setEmail(event.target.value);
             }}
@@ -111,6 +118,7 @@ function Register() {
             type="text"
             placeholder="Password"
             className="input"
+            value={password}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               setPassword(event.target.value);
             }}
