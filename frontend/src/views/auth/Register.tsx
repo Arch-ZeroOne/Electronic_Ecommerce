@@ -1,7 +1,57 @@
 import ImageBackground from "../../assets/images/register-background.jpg";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import axios from "axios";
+import axiosClient from "../../axiosClient";
 function Register() {
+  type Payload = {
+    firstname: string;
+    lastname: string;
+    gmail: string;
+    username: string;
+    password: string;
+  };
+
+  const [firstname, setFirstName] = useState<string>();
+  const [lastname, setLastName] = useState<string>();
+  const [gmail, setEmail] = useState<string>();
+  const [username, setUserName] = useState<string>();
+  const [password, setPassword] = useState<string>();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    //* handles null values
+    if (!firstname || !lastname || !gmail || !password || !username) {
+      return;
+    }
+
+    const payload: Payload = {
+      firstname,
+      lastname,
+      gmail,
+      username,
+      password,
+    };
+    register(payload);
+  };
+
+  const register = async (payload: Payload) => {
+    try {
+      console.log(payload);
+      const request = await axiosClient.post("/register", payload);
+      const response = await request.data;
+
+      console.log(response);
+    } catch (error) {
+      console.error("Error occured while submitting form values", error);
+    }
+  };
+
   return (
-    <section className="flex mr-auto p-3 items-center justify-around ml-auto mt-5 font-[Poppins] shadow-2xl w-[80%]">
+    <form
+      onSubmit={handleSubmit}
+      className="flex mr-auto p-3 items-center justify-around ml-auto mt-5 font-[Poppins] shadow-2xl w-[80%]"
+    >
       {/* Box for image and hero */}
       <div
         className="h-120 text-white w-120 rounded-xl flex flex-col items-center justify-center"
@@ -25,10 +75,46 @@ function Register() {
       <div className="flex items-center flex-col gap-3">
         <h2 className="text-2xl font-bold">Sign Up</h2>
         <section className="flex flex-col items-center gap-3 ">
-          <input type="text" placeholder="First Name" className="input" />
-          <input type="text" placeholder="Last Name" className="input" />
-          <input type="text" placeholder="Email Address" className="input" />
-          <input type="text" placeholder="Password" className="input" />
+          <input
+            type="text"
+            placeholder="First Name"
+            className="input"
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setFirstName(event.target.value)
+            }
+          />
+          <input
+            type="text"
+            placeholder="Last Name"
+            className="input"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setLastName(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Username"
+            className="input"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setUserName(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Email Address"
+            className="input"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setEmail(event.target.value);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Password"
+            className="input"
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              setPassword(event.target.value);
+            }}
+          />
           <div className="flex gap-1 items-center">
             <input
               type="checkbox"
@@ -90,7 +176,7 @@ function Register() {
           Login with Facebook
         </button>
       </div>
-    </section>
+    </form>
   );
 }
 
