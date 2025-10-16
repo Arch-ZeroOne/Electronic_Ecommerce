@@ -25,8 +25,7 @@ class AuthRequest extends FormRequest
     return [
         "firstname" => ["required","max:45"],
         "lastname"  => ["required","max:45"],
-        "gmail" => ["required","email"],
-        "username" => ["required","unique:accounts"],
+        "email" => ["required","email"],
         "password" => ["required", "max:30"]
         ];
     }
